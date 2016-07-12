@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of parms_init</title>
+  <meta name="keywords" content="parms_init">
+  <meta name="description" content="Initializes paramaters from values or by sampling from the prior dist.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">mcmc_functions</a> &gt; parms_init.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\mcmc_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>parms_init
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Initializes paramaters from values or by sampling from the prior dist.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Initializes paramaters from values or by sampling from the prior dist.
+
+ Creates a paramater structure for a DPM either from values passed into
+ the function or by sampling values from the Jeffreys prior on parameters.
+ Also calculates the logprobability of these values based on the prior.
+
+ Arguments:
+  o cue_p - (optional) cue parameter value.
+  o sal_p - (optional) salience parameter value.
+  o box_p - (optional) bias parameter values for each AOI.
+            format: [BiasAOI1 BiasAOI2 ...]
+  o habit_p - (optional) habituation parameter values for each polynomial
+              coefficient.
+              format: [HabitO1 HabitO2 HabitO3...]
+  o assoc_p - (optional) assoc parameter values for each polynomial
+              coefficient.
+              format: [AssocO1 AssocO2 AssocO3...]
+
+ Returns: 
+  o parms - A parameter structure for the new parameters</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="dpm_init.html" class="code" title="function dpm = dpm_init(KK,aa,xx,zz,qq)">dpm_init</a>	Initializes a Dirichlet Process Mixture (DPM) to known parameters</li><li><a href="dpm_mh.html" class="code" title="function [dpm,acc] = dpm_mh(dpm)">dpm_mh</a>	Runs one round of Metropolis-Hastings Sampling for a DPM</li><li><a href="propose_parms.html" class="code" title="function new_parms = propose_parms(parms,all_flag,sigma)">propose_parms</a>	Proposes new parameters for a cluster</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Initializes paramaters from values or by sampling from the prior dist.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Creates a paramater structure for a DPM either from values passed into</span>
+0004 <span class="comment">% the function or by sampling values from the Jeffreys prior on parameters.</span>
+0005 <span class="comment">% Also calculates the logprobability of these values based on the prior.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Arguments:</span>
+0008 <span class="comment">%  o cue_p - (optional) cue parameter value.</span>
+0009 <span class="comment">%  o sal_p - (optional) salience parameter value.</span>
+0010 <span class="comment">%  o box_p - (optional) bias parameter values for each AOI.</span>
+0011 <span class="comment">%            format: [BiasAOI1 BiasAOI2 ...]</span>
+0012 <span class="comment">%  o habit_p - (optional) habituation parameter values for each polynomial</span>
+0013 <span class="comment">%              coefficient.</span>
+0014 <span class="comment">%              format: [HabitO1 HabitO2 HabitO3...]</span>
+0015 <span class="comment">%  o assoc_p - (optional) assoc parameter values for each polynomial</span>
+0016 <span class="comment">%              coefficient.</span>
+0017 <span class="comment">%              format: [AssocO1 AssocO2 AssocO3...]</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Returns:</span>
+0020 <span class="comment">%  o parms - A parameter structure for the new parameters</span>
+0021 <a name="_sub0" href="#_subfunctions" class="code">function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p)</a>
+0022 
+0023     SMALL = .001;
+0024     
+0025     <span class="keyword">global</span> NUM_HABIT;
+0026     <span class="keyword">global</span> NUM_AOIS;
+0027     <span class="keyword">global</span> NUM_PARMS;
+0028 
+0029     <span class="keyword">if</span> nargin &lt; 2 <span class="comment">%draw parameters from Jeffrey's prior</span>
+0030         vars = gamrnd(SMALL,SMALL,[1 NUM_PARMS]);
+0031         means = normrnd(0,vars,[1 NUM_PARMS]);
+0032         
+0033         cue_p = means(1);
+0034         sal_p = means(2);
+0035         boxes_p = means(3:(2+NUM_AOIS)); 
+0036         habit_p = means((3+NUM_AOIS):(2+NUM_AOIS+NUM_HABIT));
+0037         assoc_p = means((3+NUM_AOIS+NUM_HABIT):NUM_PARMS);
+0038     <span class="keyword">end</span>
+0039     
+0040     parms.cue_p = cue_p;
+0041     parms.sal_p = sal_p;
+0042     parms.boxes_p = boxes_p;
+0043     parms.habit_p = habit_p;
+0044     parms.assoc_p = assoc_p;
+0045     
+0046     row_parms = [cue_p sal_p boxes_p habit_p assoc_p];
+0047 
+0048     <span class="comment">%Jeffreys prior on parms</span>
+0049     parms.logprior = logprobparms(row_parms);
+0050 
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of assoc_function_analysis</title>
+  <meta name="keywords" content="assoc_function_analysis">
+  <meta name="description" content="Analyses the results of the association function check">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">crp_model_public</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; assoc_function_analysis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>assoc_function_analysis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Analyses the results of the association function check</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Analyses the results of the association function check
+
+ Produces a table of Type I/Type II errors and also plots the estimated
+ association functions against the true association functions.
+
+ Run after assoc_function_check</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Analyses the results of the association function check</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Produces a table of Type I/Type II errors and also plots the estimated</span>
+0004 <span class="comment">% association functions against the true association functions.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Run after assoc_function_check</span>
+0007 
+0008 GRAPH_FLAG = 1;
+0009 
+0010 table = zeros(length(assocs),2);
+0011 
+0012 <span class="keyword">for</span> i = 1:length(assocs)
+0013    highs = cellfun(@(x) x.assoc_high, all_ints(i,:),<span class="string">'UniformOutput'</span>,false);
+0014    lows = cellfun(@(x) x.assoc_low, all_ints(i,:),<span class="string">'UniformOutput'</span>,false); 
+0015    
+0016    tops = cellfun(@(x) x(1), lows) &gt;= .001;
+0017    bottoms = cellfun(@(x) x(1), highs) &lt;= -.001;
+0018    
+0019    table(i,1) = sum(tops | bottoms)/30;
+0020    
+0021    tops = cellfun(@(x) x(2), lows) &gt;= .001;
+0022    bottoms = cellfun(@(x) x(2), highs) &lt;= -.001;
+0023    
+0024    table(i,2) = sum(tops | bottoms)/30;
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">if</span> GRAPH_FLAG == 1
+0028 
+0029     assocs = [.5 0; -.5 0; .5 -.2; -.5 .2];
+0030 
+0031     <span class="keyword">for</span> i = 1:size(assocs,1)
+0032 
+0033         a_vals = cellfun(@(x) x.assoc, all_means(i,:),<span class="string">'UniformOutput'</span>,<span class="keyword">...</span>
+0034             false);
+0035 
+0036         subplot(size(assocs,1)/2,size(assocs,1)/2,i);
+0037         <span class="keyword">for</span> j = 1:length(a_vals)
+0038             plot(0:.01:5,polyval([a_vals{j}(end:-1:1) 0],0:.01:5),<span class="string">':'</span>,<span class="keyword">...</span>
+0039                 <span class="string">'LineWidth'</span>,.1,<span class="string">'Color'</span>,[0 0 1]);
+0040             hold on;
+0041         <span class="keyword">end</span>
+0042         plot(0:.01:5,polyval([assocs(i,end:-1:1) 0],0:.01:5),<span class="string">'k'</span>,<span class="keyword">...</span>
+0043             <span class="string">'LineWidth'</span>,3);
+0044         axis([0 5 -3 3]);
+0045         hold off;
+0046 
+0047         xlabel(<span class="string">'Accumulated Looking'</span>,<span class="string">'fontsize'</span>,12);
+0048         ylabel(<span class="string">'Association'</span>,<span class="string">'fontsize'</span>,12);
+0049         <span class="keyword">if</span> i &gt; 2
+0050             str = [<span class="string">'\itassoc\rm = '</span>, num2str(assocs(i,2)), <span class="keyword">...</span>
+0051                 <span class="string">'\itx^2\rm + '</span>, num2str(assocs(i,1)), <span class="string">'\itx\rm'</span>];
+0052         <span class="keyword">else</span>
+0053             str = [<span class="string">'\itassoc\rm = '</span>, num2str(assocs(i,1)), <span class="string">'\itx\rm'</span>];
+0054         <span class="keyword">end</span>
+0055 
+0056             text(.2,2.1,str,<span class="string">'fontsize'</span>, 12)
+0057 
+0058     <span class="keyword">end</span>
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

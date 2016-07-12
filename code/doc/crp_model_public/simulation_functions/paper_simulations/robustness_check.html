@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of robustness_check</title>
+  <meta name="keywords" content="robustness_check">
+  <meta name="description" content="Checks whether inference can recover ground-truth parameter values">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">crp_model_public</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; robustness_check.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>robustness_check
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Checks whether inference can recover ground-truth parameter values</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Checks whether inference can recover ground-truth parameter values
+
+ Sets cue, salience, and association to known values, generates data for
+ these parameter values, and then tries to infer them from the generated
+ data.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Checks whether inference can recover ground-truth parameter values</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Sets cue, salience, and association to known values, generates data for</span>
+0004 <span class="comment">% these parameter values, and then tries to infer them from the generated</span>
+0005 <span class="comment">% data.</span>
+0006 <span class="comment">%</span>
+0007 cue_vals = [0 .5 1 1.5 2 2.5];
+0008 sal_vals = [0 .5 1 1.5 2 2.5];
+0009 assoc_vals = [0 .1 .2 .3 .4 .5];
+0010 
+0011 all_ints = cell(length(cue_vals),length(sal_vals),length(assoc_vals));
+0012 all_means = cell(length(cue_vals),length(sal_vals),length(assoc_vals));
+0013 all_meds = cell(length(cue_vals),length(sal_vals),length(assoc_vals));
+0014 all_test_qqs = cell(length(cue_vals),length(sal_vals),length(assoc_vals));
+0015 
+0016 all_cs = zeros(length(cue_vals),length(sal_vals),length(assoc_vals));
+0017 all_ps = zeros(length(cue_vals),length(sal_vals),length(assoc_vals));
+0018 all_test_cs = zeros(length(cue_vals),length(sal_vals),length(assoc_vals));
+0019 all_test_ps = zeros(length(cue_vals),length(sal_vals),length(assoc_vals));
+0020 
+0021 <span class="keyword">for</span> c_val = 1:length(cue_vals)
+0022     <span class="keyword">for</span> s_val = 1:length(sal_vals)
+0023         <span class="keyword">for</span> a_val = 1:length(assoc_vals)
+0024 
+0025             disp([c_val s_val a_val])
+0026             tic
+0027             
+0028             [test_qq,data] = model_test(1,cue_vals(c_val), <span class="keyword">...</span>
+0029                 sal_vals(s_val), assoc_vals(a_val));
+0030             
+0031             all_test_qqs{c_val,s_val,a_val} = test_qq;
+0032             
+0033             [~,dpms] = aggregate_subjs_test;
+0034             [ints nns meds means stds]= cred_int(dpms(200:end));
+0035             
+0036             all_ints{c_val,s_val,a_val} = ints{1};
+0037             all_means{c_val,s_val,a_val} = means{1};
+0038             all_meds{c_val,s_val,a_val} = meds{1};   
+0039             
+0040             [cs,ps] = cellfun(@(x) dpm_corr(x,0),dpms(200:10:end));
+0041             all_cs(c_val,s_val,a_val) = mean(cs);
+0042             all_ps(c_val,s_val,a_val) = sum(ps &lt; .05)/length(ps);
+0043             
+0044             [cs,ps] = cellfun(@(x) dpm_corr(x,1),dpms(200:10:end));
+0045             all_test_cs(c_val,s_val,a_val) = mean(cs);
+0046             all_test_ps(c_val,s_val,a_val) = sum(ps &lt; .05)/length(ps);
+0047             
+0048             toc
+0049         <span class="keyword">end</span>
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  logprobdpm -> logprobcrp;
+  logprobdpm -> logprobdata;
+  logprobdpm -> logprobparms;
+
+  logprobcrp [URL="logprobcrp.html"];
+  logprobdata [URL="logprobdata.html"];
+  logprobdpm [URL="logprobdpm.html"];
+  logprobparms [URL="logprobparms.html"];
+}

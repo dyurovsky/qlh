@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of logprobcrp</title>
+  <meta name="keywords" content="logprobcrp">
+  <meta name="description" content="Log probability of a clustering using the Chinese Restaurant Process">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">prob_functions</a> &gt; logprobcrp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\prob_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>logprobcrp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Log probability of a clustering using the Chinese Restaurant Process</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function logprob = logprobcrp(nn,aa) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Log probability of a clustering using the Chinese Restaurant Process 
+
+ Calculates the log probability of an observed clustering distribution
+ using the Chinese Restaurant Process distribution.
+
+ Arguments:
+ o nn - the number of participants in each cluster
+
+ Returns: 
+ o logprob - the log probability of the cluster assignments</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="logprobdpm.html" class="code" title="function logprob = logprobdpm(dpm)">logprobdpm</a>	Calculates probability of observed data given a parameterized DPM</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Log probability of a clustering using the Chinese Restaurant Process</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Calculates the log probability of an observed clustering distribution</span>
+0004 <span class="comment">% using the Chinese Restaurant Process distribution.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Arguments:</span>
+0007 <span class="comment">% o nn - the number of participants in each cluster</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Returns:</span>
+0010 <span class="comment">% o logprob - the log probability of the cluster assignments</span>
+0011 <a name="_sub0" href="#_subfunctions" class="code">function logprob = logprobcrp(nn,aa)</a>
+0012 
+0013 logprob = gammaln(aa)+ length(nn)*log(aa) - gammaln(aa + sum(nn)) + <span class="keyword">...</span>
+0014     sum(gammaln(nn));
+0015 
+0016 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

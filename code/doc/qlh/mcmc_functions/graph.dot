@@ -1,0 +1,18 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  dpm_init -> parms_init;
+  dpm_mh -> parms_init;
+  dpm_mh -> propose_parms;
+  dpm_sm -> parm_change_like;
+  dpm_sm -> propose_parms;
+  one_subj_mh -> propose_parms;
+  propose_parms -> parms_init;
+
+  dpm_init [URL="dpm_init.html"];
+  dpm_mh [URL="dpm_mh.html"];
+  dpm_sm [URL="dpm_sm.html"];
+  one_subj_mh [URL="one_subj_mh.html"];
+  parm_change_like [URL="parm_change_like.html"];
+  parms_init [URL="parms_init.html"];
+  propose_parms [URL="propose_parms.html"];
+}

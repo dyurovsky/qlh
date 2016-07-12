@@ -1,0 +1,12 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  aggregate_subjs_test -> indiv_subj_test;
+  model_test -> data_init;
+  model_test -> gen_data_pt;
+
+  aggregate_subjs_test [URL="aggregate_subjs_test.html"];
+  data_init [URL="data_init.html"];
+  gen_data_pt [URL="gen_data_pt.html"];
+  indiv_subj_test [URL="indiv_subj_test.html"];
+  model_test [URL="model_test.html"];
+}

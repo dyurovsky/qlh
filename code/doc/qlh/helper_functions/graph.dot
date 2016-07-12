@@ -1,0 +1,18 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  get_alphas -> get_base_alphas;
+  get_assoc_mat -> get_words;
+  get_base_alphas -> iscued;
+  get_base_alphas -> issal;
+
+  get_alphas [URL="get_alphas.html"];
+  get_assoc_mat [URL="get_assoc_mat.html"];
+  get_base_alphas [URL="get_base_alphas.html"];
+  get_habit_mat [URL="get_habit_mat.html"];
+  get_proportions [URL="get_proportions.html"];
+  get_structure [URL="get_structure.html"];
+  get_words [URL="get_words.html"];
+  iscued [URL="iscued.html"];
+  issal [URL="issal.html"];
+  mdpa [URL="mdpa.html"];
+}

@@ -1,0 +1,10 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+
+  assoc_function_analysis [URL="assoc_function_analysis.html"];
+  assoc_function_check [URL="assoc_function_check.html"];
+  cluster_analysis [URL="cluster_analysis.html"];
+  cluster_check [URL="cluster_check.html"];
+  robustness_check [URL="robustness_check.html"];
+  robustness_graphs [URL="robustness_graphs.html"];
+}

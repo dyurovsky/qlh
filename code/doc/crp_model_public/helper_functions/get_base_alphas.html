@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_base_alphas</title>
+  <meta name="keywords" content="get_base_alphas">
+  <meta name="description" content="Calculates base alpha params for Dirichlet distributions on each trial">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">helper_functions</a> &gt; get_base_alphas.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\helper_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>get_base_alphas
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates base alpha params for Dirichlet distributions on each trial</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function alphas = get_base_alphas(parms,structure) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Calculates base alpha params for Dirichlet distributions on each trial
+
+ Base alpha paramaters encode whether each AOI is cued and/or salient on
+ each trial.
+
+ Arguments:
+  o parms - the cognitive model parameters that define attention to cue
+            and salience for this participant.
+  o structure -  the experimental settings for this participant
+
+ Returns: 
+ o alphas - Dirichlet distribution alpha parameters for each trial</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="iscued.html" class="code" title="function cued = iscued(mat)">iscued</a>	Gets whether each AOI is cued on each trial</li><li><a href="issal.html" class="code" title="function sals = issal(mat)">issal</a>	Gets whether each AOI is salient on each trial</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="get_alphas.html" class="code" title="function alphas = get_alphas(data_pt,parms)">get_alphas</a>	Calculates alpha parameters for the Dirichlet distirbutions on each trial</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Calculates base alpha params for Dirichlet distributions on each trial</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Base alpha paramaters encode whether each AOI is cued and/or salient on</span>
+0004 <span class="comment">% each trial.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Arguments:</span>
+0007 <span class="comment">%  o parms - the cognitive model parameters that define attention to cue</span>
+0008 <span class="comment">%            and salience for this participant.</span>
+0009 <span class="comment">%  o structure -  the experimental settings for this participant</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Returns:</span>
+0012 <span class="comment">% o alphas - Dirichlet distribution alpha parameters for each trial</span>
+0013 <a name="_sub0" href="#_subfunctions" class="code">function alphas = get_base_alphas(parms,structure)</a>
+0014 
+0015 cue = parms.cue_p;
+0016 sal = parms.sal_p;
+0017 boxes = parms.boxes_p;
+0018 
+0019 alphas = sal*<a href="issal.html" class="code" title="function sals = issal(mat)">issal</a>(structure) + cue*<a href="iscued.html" class="code" title="function cued = iscued(mat)">iscued</a>(structure);
+0020 <span class="comment">%alphas = alphas + ones(size(alphas,1),1)*boxes;</span>
+0021 
+0022 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

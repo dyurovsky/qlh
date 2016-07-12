@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of assoc_function_check</title>
+  <meta name="keywords" content="assoc_function_check">
+  <meta name="description" content="Checks whether the model can handle different kinds of assoc functions">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">crp_model_public</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; assoc_function_check.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>assoc_function_check
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Checks whether the model can handle different kinds of assoc functions</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Checks whether the model can handle different kinds of assoc functions
+
+ Tries 4 kinds of functions: Linear increasing, linear decreasing, 
+ quadratic up, and quadratic down</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Checks whether the model can handle different kinds of assoc functions</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Tries 4 kinds of functions: Linear increasing, linear decreasing,</span>
+0004 <span class="comment">% quadratic up, and quadratic down</span>
+0005 <span class="comment">%</span>
+0006 NUM_RUNS = 30;
+0007 
+0008 assocs = [.5 0; -.5 0; <span class="keyword">...</span>
+0009           .5 -.2; -.5 .2];
+0010 
+0011 all_ints = cell(size(assocs,1),NUM_RUNS);
+0012 all_means = cell(size(assocs,1),NUM_RUNS);
+0013 all_meds = cell(size(assocs,1),NUM_RUNS);
+0014 test_qqs = cell(size(assocs,1),NUM_RUNS);
+0015 
+0016 <span class="keyword">for</span> a_val = 1:size(assocs,1)
+0017     <span class="keyword">for</span> check = 1:NUM_RUNS
+0018     
+0019         disp([a_val check])
+0020         tic
+0021         
+0022         [test_qq,data,~] = model_test(1,1,1,assocs(a_val,:));
+0023 
+0024         test_qqs{a_val,check} = test_qq;
+0025 
+0026         [~,dpms] = aggregate_subjs_test;
+0027         [ints nns meds means stds]= cred_int(dpms(1000:end));
+0028 
+0029         all_ints{a_val,check} = ints{1};
+0030         all_means{a_val,check} = means{1};
+0031         all_meds{a_val,check} = meds{1};   
+0032 
+0033         toc
+0034     <span class="keyword">end</span>
+0035 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

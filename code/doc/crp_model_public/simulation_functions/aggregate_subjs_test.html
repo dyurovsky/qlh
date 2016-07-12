@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of aggregate_subjs_test</title>
+  <meta name="keywords" content="aggregate_subjs_test">
+  <meta name="description" content="Runs the MCMC sampler for all participants together.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">simulation_functions</a> &gt; aggregate_subjs_test.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\simulation_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>aggregate_subjs_test
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Runs the MCMC sampler for all participants together.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [dpm_logprobs,dpms,accs,dpm_qqs] =aggregate_subjs_test(data,group_iter,indiv_iter,sm_iter,print_iter,thin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Runs the MCMC sampler for all participants together.
+
+ Runs the MCMC sampler to generate a posterior parameter distribution for
+ the Dirichlet Process Mixture Model for all participants. Starts by 
+ running the sampler for each participant individually in order to 
+ seed the DPM sampler.
+
+ Arguments:
+  o data - the data structure for all participants
+  o group_iter - the (optional) number of iterations for which to sample 
+                 for the group. Defaults to 50000 if no value is provided.
+  o indiv_iter - the (optional) number of iterations for which to sample 
+                 for each individual. Defaults to 2000 if no value is 
+                 provided.
+  o sm_iter - the (optional) number of iterations between split/merge 
+              samples. Defaults to 100 if no value is provided.
+  o print_iter - the (optional) number of iterations between displaying 
+                 updates. Defaults to 1000 if no value is provided.
+  o thin - the (optional) thinning parameter. Defaults to 5 if no value is
+           provided.
+
+ Returns: 
+ o dpm_logprobs - a vector of log probabilities for each MCMC sample
+ o dpms - a cell array of DPMs for each sample
+ o accs - a vector of how many updates were made on each sample</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="indiv_subj_test.html" class="code" title="function [logprobs,qqs,accs] = indiv_subj_test(data,num_iter,print_iter)">indiv_subj_test</a>	Runs the MCMC sampler for each participant separately.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Runs the MCMC sampler for all participants together.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Runs the MCMC sampler to generate a posterior parameter distribution for</span>
+0004 <span class="comment">% the Dirichlet Process Mixture Model for all participants. Starts by</span>
+0005 <span class="comment">% running the sampler for each participant individually in order to</span>
+0006 <span class="comment">% seed the DPM sampler.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Arguments:</span>
+0009 <span class="comment">%  o data - the data structure for all participants</span>
+0010 <span class="comment">%  o group_iter - the (optional) number of iterations for which to sample</span>
+0011 <span class="comment">%                 for the group. Defaults to 50000 if no value is provided.</span>
+0012 <span class="comment">%  o indiv_iter - the (optional) number of iterations for which to sample</span>
+0013 <span class="comment">%                 for each individual. Defaults to 2000 if no value is</span>
+0014 <span class="comment">%                 provided.</span>
+0015 <span class="comment">%  o sm_iter - the (optional) number of iterations between split/merge</span>
+0016 <span class="comment">%              samples. Defaults to 100 if no value is provided.</span>
+0017 <span class="comment">%  o print_iter - the (optional) number of iterations between displaying</span>
+0018 <span class="comment">%                 updates. Defaults to 1000 if no value is provided.</span>
+0019 <span class="comment">%  o thin - the (optional) thinning parameter. Defaults to 5 if no value is</span>
+0020 <span class="comment">%           provided.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Returns:</span>
+0023 <span class="comment">% o dpm_logprobs - a vector of log probabilities for each MCMC sample</span>
+0024 <span class="comment">% o dpms - a cell array of DPMs for each sample</span>
+0025 <span class="comment">% o accs - a vector of how many updates were made on each sample</span>
+0026 <a name="_sub0" href="#_subfunctions" class="code">function [dpm_logprobs,dpms,accs,dpm_qqs] = </a><span class="keyword">...</span>
+0027     aggregate_subjs_test(data,group_iter,indiv_iter,sm_iter,<span class="keyword">...</span>
+0028     print_iter,thin)
+0029 
+0030 <span class="keyword">global</span> ALPHA;
+0031 
+0032 num_subjs = length(data);
+0033 
+0034 <span class="keyword">if</span> nargin &lt; 2
+0035     group_iter = 50000;
+0036 <span class="keyword">end</span>
+0037 <span class="keyword">if</span> nargin &lt; 3
+0038     indiv_iter = 2000;
+0039 <span class="keyword">end</span>
+0040 <span class="keyword">if</span> nargin &lt; 4
+0041     sm_iter = 100;
+0042 <span class="keyword">end</span>
+0043 <span class="keyword">if</span> nargin &lt; 5
+0044     print_iter = 1000;
+0045 <span class="keyword">end</span>
+0046 <span class="keyword">if</span> nargin &lt; 6
+0047     thin = 5;
+0048 <span class="keyword">end</span>
+0049 
+0050 dpm_logprobs = zeros(group_iter/thin,1);
+0051 dpms = cell(group_iter/thin,1);
+0052 dpm_qqs = cell(1,num_subjs);
+0053 accs = zeros(group_iter/thin,1);
+0054 
+0055 <span class="comment">% Do individual sampling to seed the group sampler</span>
+0056 [logprobs,qqs] = <a href="indiv_subj_test.html" class="code" title="function [logprobs,qqs,accs] = indiv_subj_test(data,num_iter,print_iter)">indiv_subj_test</a>(data,indiv_iter,print_iter);
+0057 <span class="keyword">for</span> subj = 1:num_subjs
+0058     [~,i] = max(logprobs(:,subj));
+0059     qq = qqs{i,subj};
+0060     
+0061     dpm_qqs{subj} = qq;
+0062     
+0063 <span class="keyword">end</span>
+0064 
+0065 dpm = dpm_init(num_subjs,ALPHA,data,1:num_subjs,dpm_qqs);
+0066 
+0067 pos = 1;
+0068 <span class="keyword">for</span> iter = 1:group_iter
+0069 
+0070     <span class="keyword">if</span> mod(iter,thin) == 0
+0071         dpm_logprobs(pos) = logprobdpm(dpm);
+0072         dpms{pos} = dpm;
+0073         pos = pos + 1;
+0074     <span class="keyword">end</span>            
+0075 
+0076    <span class="keyword">if</span> mod(iter,sm_iter) == 0
+0077        [dpm,accs(pos)] = dpm_sm(dpm);
+0078    <span class="keyword">else</span>
+0079        [dpm,accs(pos)] = dpm_mh(dpm);
+0080    <span class="keyword">end</span>
+0081    
+0082    <span class="keyword">if</span> mod(iter,print_iter) == 0
+0083        disp([<span class="string">'iter: '</span> num2str(iter) <span class="keyword">...</span>
+0084       <span class="string">', clusters: '</span> num2str(dpm.KK) <span class="keyword">...</span>
+0085       <span class="string">', logprob: '</span> num2str(logprobdpm(dpm)) <span class="keyword">...</span>
+0086       <span class="string">', alpha: '</span>, num2str(dpm.aa)]);
+0087    <span class="keyword">end</span>
+0088 <span class="keyword">end</span>
+0089 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

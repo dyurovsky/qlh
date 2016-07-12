@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of propose_parms</title>
+  <meta name="keywords" content="propose_parms">
+  <meta name="description" content="Proposes new parameters for a cluster">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">mcmc_functions</a> &gt; propose_parms.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\mcmc_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>propose_parms
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Proposes new parameters for a cluster</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function new_parms = propose_parms(parms,all_flag,sigma) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Proposes new parameters for a cluster
+
+ Proposes parameters by sampling around current parameters with a Normal
+ distribution with standard deviation SIGMA. If all_flag is true, samples
+ all parameters. Otherwise, samples just one parameter. In this second
+ case, each parameter is equally likly to be sampled.
+
+ Arguments:
+ o parms - starting parameters around which to sample
+ o all_flag - A boolean indicating whether all params should be sampled
+ o sigma - An (optional) parameter specifying the standard deviation of
+           the gaussian used to propose parameters. Defaults to 1.5.
+
+ Returns: 
+ o new_parms - the new parameters after sampling</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="parms_init.html" class="code" title="function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p)">parms_init</a>	Initializes paramaters from values or by sampling from the prior dist.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="dpm_mh.html" class="code" title="function [dpm,acc] = dpm_mh(dpm)">dpm_mh</a>	Runs one round of Metropolis-Hastings Sampling for a DPM</li><li><a href="dpm_sm.html" class="code" title="function [dpm,acc] = dpm_sm(dpm)">dpm_sm</a>	Runs one round of Split-Merge Sampling for a DPM</li><li><a href="one_subj_mh.html" class="code" title="function [dpm,acc] = one_subj_mh(dpm)">one_subj_mh</a>	Runs one round of Metropolis-Hastings Sampling for a single subject DPM</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Proposes new parameters for a cluster</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Proposes parameters by sampling around current parameters with a Normal</span>
+0004 <span class="comment">% distribution with standard deviation SIGMA. If all_flag is true, samples</span>
+0005 <span class="comment">% all parameters. Otherwise, samples just one parameter. In this second</span>
+0006 <span class="comment">% case, each parameter is equally likly to be sampled.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Arguments:</span>
+0009 <span class="comment">% o parms - starting parameters around which to sample</span>
+0010 <span class="comment">% o all_flag - A boolean indicating whether all params should be sampled</span>
+0011 <span class="comment">% o sigma - An (optional) parameter specifying the standard deviation of</span>
+0012 <span class="comment">%           the gaussian used to propose parameters. Defaults to 1.5.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Returns:</span>
+0015 <span class="comment">% o new_parms - the new parameters after sampling</span>
+0016 <a name="_sub0" href="#_subfunctions" class="code">function new_parms = propose_parms(parms,all_flag,sigma)</a>
+0017 
+0018     <span class="keyword">global</span> SIGMA;
+0019     
+0020        <span class="keyword">if</span> nargin &lt; 2
+0021         all_flag = 0;
+0022     <span class="keyword">end</span>
+0023     
+0024     <span class="keyword">if</span> nargin &gt;= 3
+0025         SIGMA = sigma;
+0026     <span class="keyword">end</span>
+0027 
+0028     cue_p = parms.cue_p;
+0029     sal_p = parms.sal_p;
+0030     boxes_p = parms.boxes_p;
+0031     habit_p = parms.habit_p;
+0032     assoc_p = parms.assoc_p;
+0033     
+0034     <span class="keyword">if</span> all_flag
+0035         cue_p = cue_p + normrnd(0,SIGMA);
+0036         sal_p = cue_p + normrnd(0,SIGMA); 
+0037         boxes_p = boxes_p + normrnd(0,SIGMA,size(boxes_p)); 
+0038         habit_p = habit_p + normrnd(0,SIGMA,size(habit_p)); 
+0039         assoc_p = assoc_p + normrnd(0,SIGMA,size(assoc_p));
+0040     <span class="keyword">else</span>
+0041     
+0042         row_parms = [cue_p sal_p boxes_p habit_p assoc_p];
+0043 
+0044         ind = ceil(rand*length(row_parms));
+0045         row_parms(ind) = row_parms(ind) +  normrnd(0,SIGMA);
+0046    
+0047         <span class="keyword">if</span> ind == 1
+0048             cue_p = row_parms(ind);
+0049         <span class="keyword">elseif</span> ind == 2
+0050             sal_p = row_parms(ind);
+0051         <span class="keyword">elseif</span> (ind &gt; 2) &amp;&amp; (ind &lt;= (2 + length(boxes_p)))
+0052             boxes_p(ind-2) = row_parms(ind);
+0053         <span class="keyword">elseif</span> (ind &gt; 2 + length(boxes_p)) &amp;&amp; <span class="keyword">...</span>
+0054                 (ind &lt;= (2 + length(boxes_p) + length(habit_p)))
+0055             habit_p(ind - 2 - length(boxes_p)) = row_parms(ind);
+0056         <span class="keyword">else</span>
+0057             assoc_p(ind - 2 - length(boxes_p) - length(habit_p)) = <span class="keyword">...</span>
+0058                 row_parms(ind);
+0059         <span class="keyword">end</span>
+0060     <span class="keyword">end</span>
+0061     
+0062     new_parms = <a href="parms_init.html" class="code" title="function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p)">parms_init</a>(cue_p,sal_p,boxes_p,habit_p,assoc_p);
+0063     
+0064 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

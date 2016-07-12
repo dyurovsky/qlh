@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of robustness_graphs</title>
+  <meta name="keywords" content="robustness_graphs">
+  <meta name="description" content="Graphs recovered parameter values against generated parameter values">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">qlh</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; robustness_graphs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>robustness_graphs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Graphs recovered parameter values against generated parameter values</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Graphs recovered parameter values against generated parameter values
+
+ Run after robustness_check</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Graphs recovered parameter values against generated parameter values</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Run after robustness_check</span>
+0004 <span class="comment">%</span>
+0005 GRAPH_FLAG = 1;
+0006 
+0007 cue_vals = [0 .5 1 1.5 2 2.5];
+0008 sal_vals = [0 .5 1 1.5 2 2.5];
+0009 assoc_vals = [0 .1 .2 .3 .4 .5];
+0010 
+0011 assocs = cellfun(@(x) x.assoc, all_means);
+0012 cues = shiftdim(cellfun(@(x) x.cue, all_means),1);
+0013 sals = shiftdim(cellfun(@(x) x.sal, all_means),2);
+0014 
+0015 assocs = reshape(assocs,size(assocs,1)*size(assocs,2)*size(assocs,3),1);
+0016 cues = reshape(cues,size(cues,1)*size(cues,2)*size(cues,3),1);
+0017 sals = reshape(sals,size(sals,1)*size(sals,2)*size(sals,3),1);
+0018 
+0019 assoc_highs = cellfun(@(x) x.assoc_high, all_ints);
+0020 assoc_lows = cellfun(@(x) x.assoc_low, all_ints);
+0021 assoc_highs = reshape(assoc_highs,size(assocs,1)*size(assocs,2)*size(assocs,3),1);
+0022 assoc_lows = reshape(assoc_lows,size(assocs,1)*size(assocs,2)*size(assocs,3),1);
+0023 
+0024 cue_highs = shiftdim(cellfun(@(x) x.cue(2), all_ints),1);
+0025 cue_lows = shiftdim(cellfun(@(x) x.cue(1), all_ints),1);
+0026 cue_highs = reshape(cue_highs,size(cues,1)*size(cues,2)*size(cues,3),1);
+0027 cue_lows = reshape(cue_lows,size(cues,1)*size(cues,2)*size(cues,3),1);
+0028 
+0029 sal_highs = shiftdim(cellfun(@(x) x.sal(2), all_ints),2);
+0030 sal_lows = shiftdim(cellfun(@(x) x.sal(1), all_ints),2);
+0031 sal_highs = reshape(sal_highs,size(sals,1)*size(sals,2)*size(sals,3),1);
+0032 sal_lows = reshape(sal_lows,size(sals,1)*size(sals,2)*size(sals,3),1);
+0033 
+0034 assoc_oks = reshape(ones(36,1)*assoc_vals,216,1);
+0035 assoc_under = assoc_oks &gt; assoc_highs;
+0036 assoc_over = assoc_oks &lt; assoc_lows;
+0037 assoc_oks = ~(assoc_over | assoc_under);
+0038 
+0039 cue_oks = reshape(ones(36,1)*cue_vals,216,1);
+0040 cue_under = cue_oks &gt; cue_highs;
+0041 cue_over = cue_oks &lt; cue_lows;
+0042 cue_oks = ~(cue_over | cue_under);
+0043 
+0044 sal_oks = reshape(ones(36,1)*sal_vals,216,1);
+0045 sal_under = sal_oks &gt; sal_highs;
+0046 sal_over = sal_oks &lt; sal_lows;
+0047 sal_oks = ~(sal_over | sal_under);
+0048 
+0049 x = reshape(ones(36,1)*cue_vals,216,1);
+0050 stats = regstats(cues,x);
+0051 rsq = stats.rsquare;
+0052 p = stats.beta(end:-1:1);
+0053 yfit = polyval(p,cue_vals);
+0054 
+0055 <span class="keyword">if</span> GRAPH_FLAG == 1
+0056     subplot(3,1,1);
+0057     plot(cue_vals,yfit,<span class="string">'k'</span>);
+0058     hold on;
+0059 
+0060     scatter(x,cues,[],[.6 .6 .6]);
+0061     axis([-.5 3 -.5 3])
+0062     set(gca,<span class="string">'xtick'</span>,cue_vals)
+0063     set(gca,<span class="string">'ytick'</span>,cue_vals);
+0064     xlabel(<span class="string">'True Values'</span>,<span class="string">'fontsize'</span>,12);
+0065     ylabel(<span class="string">'Inferred Values'</span>,<span class="string">'fontsize'</span>,12);
+0066     title(<span class="string">'Cue'</span>,<span class="string">'fontsize'</span>,14);
+0067     text(-.2,2.4,[<span class="string">'\ity\rm = '</span>, num2str(p(1),3), <span class="keyword">...</span>
+0068         <span class="string">'\itx\rm + '</span>, num2str(p(2),2)], <span class="string">'fontsize'</span>, 12)
+0069     text(-.3,1.8,[<span class="string">'\itR^2\rm = '</span>, num2str(rsq,3)], <span class="string">'fontsize'</span>, 12)
+0070 <span class="keyword">end</span>
+0071 
+0072 
+0073 x = reshape(ones(36,1)*sal_vals,216,1);
+0074 stats = regstats(sals,x);
+0075 rsq = stats.rsquare;
+0076 p = stats.beta(end:-1:1);
+0077 yfit = polyval(p,sal_vals);
+0078 
+0079 <span class="keyword">if</span> GRAPH_FLAG == 1
+0080     subplot(3,1,2);
+0081     plot(sal_vals,yfit,<span class="string">'k'</span>)
+0082     hold on
+0083 
+0084     scatter(x,sals,[],[.6 .6 .6]);
+0085     axis([-.5 3 -.5 3])
+0086     set(gca,<span class="string">'xtick'</span>,sal_vals)
+0087     set(gca,<span class="string">'ytick'</span>,sal_vals);
+0088     xlabel(<span class="string">'True Values'</span>,<span class="string">'fontsize'</span>,12);
+0089     ylabel(<span class="string">'Inferred Values'</span>,<span class="string">'fontsize'</span>,12);
+0090     title(<span class="string">'Salience'</span>,<span class="string">'fontsize'</span>,14);
+0091     text(-.2,2.4,[<span class="string">'\ity\rm = '</span>, num2str(p(1),3), <span class="keyword">...</span>
+0092         <span class="string">'\itx\rm + '</span>, num2str(p(2),2)], <span class="string">'fontsize'</span>, 12)
+0093     text(-.3,1.8,[<span class="string">'\itR^2\rm = '</span>, num2str(rsq,3)], <span class="string">'fontsize'</span>, 12)
+0094 <span class="keyword">end</span>
+0095 
+0096 x = reshape(ones(36,1)*assoc_vals,216,1);
+0097 
+0098 stats = regstats(assocs,x);
+0099 rsq = stats.rsquare;
+0100 p = stats.beta(end:-1:1);
+0101 yfit = polyval(p,assoc_vals);
+0102 
+0103 <span class="keyword">if</span> GRAPH_FLAG == 1
+0104     subplot(3,1,3);
+0105     plot(assoc_vals,yfit,<span class="string">'k'</span>)
+0106     hold on
+0107 
+0108     scatter(x,assocs,[],[.6 .6 .6]);
+0109     axis([-.1 .6 -.1 .6])
+0110     set(gca,<span class="string">'xtick'</span>,assoc_vals)
+0111     set(gca,<span class="string">'ytick'</span>,assoc_vals);
+0112     xlabel(<span class="string">'True Values'</span>,<span class="string">'fontsize'</span>,12);
+0113     ylabel(<span class="string">'Inferred Values'</span>,<span class="string">'fontsize'</span>,12);
+0114     title(<span class="string">'Association'</span>,<span class="string">'fontsize'</span>,14);
+0115     text(-.036,.47,[<span class="string">'\ity\rm = '</span>, num2str(p(1),3), <span class="keyword">...</span>
+0116         <span class="string">'\itx\rm + '</span>, num2str(p(2),2)], <span class="string">'fontsize'</span>, 12)
+0117     text(-.057,.35,[<span class="string">'\itR^2\rm = '</span>, num2str(rsq,3)], <span class="string">'fontsize'</span>, 12)
+0118 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_proportions</title>
+  <meta name="keywords" content="get_proportions">
+  <meta name="description" content="Converts from fixations list to prop. looking to each AOI on each trial">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">helper_functions</a> &gt; get_proportions.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\helper_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>get_proportions
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Converts from fixations list to prop. looking to each AOI on each trial</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function props = get_proportions(fixes,trial_len) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Converts from fixations list to prop. looking to each AOI on each trial
+
+ Arguments:
+  o fixes - a cell array of all fixations for one participant
+            format: [start end x y roi]
+  o trial_len - a vector of trial lengths for each trial in the experiment
+
+ Returns: 
+ o props - Proportion of looking to each AOI on each trial</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Converts from fixations list to prop. looking to each AOI on each trial</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Arguments:</span>
+0004 <span class="comment">%  o fixes - a cell array of all fixations for one participant</span>
+0005 <span class="comment">%            format: [start end x y roi]</span>
+0006 <span class="comment">%  o trial_len - a vector of trial lengths for each trial in the experiment</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Returns:</span>
+0009 <span class="comment">% o props - Proportion of looking to each AOI on each trial</span>
+0010 <a name="_sub0" href="#_subfunctions" class="code">function props = get_proportions(fixes,trial_len)</a>
+0011 
+0012 <span class="keyword">global</span> NUM_AOIS;
+0013 
+0014 <span class="comment">%[start end x y roi] - fixation format</span>
+0015 T_START = 1;
+0016 T_END = 2;
+0017 
+0018 props = zeros(1,NUM_AOIS);
+0019 
+0020 <span class="keyword">for</span> aoi = 1:(NUM_AOIS-1)
+0021     
+0022    aoi_inds = fixes(:,end) == aoi;
+0023    props(aoi) = sum(fixes(aoi_inds,T_END) - fixes(aoi_inds,T_START));
+0024    
+0025 <span class="keyword">end</span>
+0026 
+0027 props(end) = trial_len - sum(props);
+0028 
+0029 props = props./sum(props);
+0030 
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

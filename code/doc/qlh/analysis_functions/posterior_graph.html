@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of posterior_graph</title>
+  <meta name="keywords" content="posterior_graph">
+  <meta name="description" content="Graphs posterior distributions for parameters from Wu &amp; Kirkham">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">analysis_functions</a> &gt; posterior_graph.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\analysis_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>posterior_graph
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Graphs posterior distributions for parameters from Wu &amp; Kirkham</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Graphs posterior distributions for parameters from Wu &amp; Kirkham
+
+ Graphs the posterior distributions for parameter estimates for the four
+ conditions in Wu &amp; Kirkham. Error bars indicate 68% confidence interval.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="graph_clusters_bars.html" class="code" title="function [] = graph_clusters_bars(meds,ints,c_sizes,color)">graph_clusters_bars</a>	Graphs posterior median and cred. int. for association and cue params</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Graphs posterior distributions for parameters from Wu &amp; Kirkham</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Graphs the posterior distributions for parameter estimates for the four</span>
+0004 <span class="comment">% conditions in Wu &amp; Kirkham. Error bars indicate 68% confidence interval.</span>
+0005 
+0006 load group_nocue_analysis_half
+0007 <a href="graph_clusters_bars.html" class="code" title="function [] = graph_clusters_bars(meds,ints,c_sizes,color)">graph_clusters_bars</a>(meds,ints,mean(nns),[0 .6 0]);
+0008 
+0009 load group_8mo_face_analysis_half
+0010 <a href="graph_clusters_bars.html" class="code" title="function [] = graph_clusters_bars(meds,ints,c_sizes,color)">graph_clusters_bars</a>(meds,ints,mean(nns),[0 0 .6]);
+0011 
+0012 load group_square_analysis_half
+0013 <a href="graph_clusters_bars.html" class="code" title="function [] = graph_clusters_bars(meds,ints,c_sizes,color)">graph_clusters_bars</a>(meds,ints,mean(nns),[.6 0 0]);
+0014 
+0015 load group_4mo_face_analysis_half
+0016 <a href="graph_clusters_bars.html" class="code" title="function [] = graph_clusters_bars(meds,ints,c_sizes,color)">graph_clusters_bars</a>(meds,ints,mean(nns),[.6 .6 0]);
+0017 
+0018 h = legend({<span class="string">'8mo NoCue'</span>,<span class="string">'8mo Face'</span>,<span class="string">'Square'</span>, <span class="string">'4mo Face'</span>});
+0019 set(h,<span class="string">'Fontsize'</span>,12);</pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  cred_int -> cred_int_cluster;
+  posterior_corr -> dpm_corr;
+  posterior_graph -> graph_clusters_bars;
+
+  cred_int [URL="cred_int.html"];
+  cred_int_cluster [URL="cred_int_cluster.html"];
+  dpm_corr [URL="dpm_corr.html"];
+  graph_clusters_bars [URL="graph_clusters_bars.html"];
+  posterior_corr [URL="posterior_corr.html"];
+  posterior_graph [URL="posterior_graph.html"];
+}

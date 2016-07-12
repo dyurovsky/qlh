@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dpm_init</title>
+  <meta name="keywords" content="dpm_init">
+  <meta name="description" content="Initializes a Dirichlet Process Mixture (DPM) to known parameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">mcmc_functions</a> &gt; dpm_init.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\mcmc_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>dpm_init
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Initializes a Dirichlet Process Mixture (DPM) to known parameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dpm = dpm_init(KK,aa,xx,zz,qq) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Initializes a Dirichlet Process Mixture (DPM) to known parameters
+
+ Initializes a Dirichlet Process Mixture from known clusters or from the
+ prior distribution for cluster parameters.
+
+ Arguments:
+ o KK - number of active clusters
+ o aa - concentration parameter
+ o xx - a cell array of data for each participant
+        format: x_i=xx{i}
+ o zz - a vectir of initial cluster assignments for each participant
+ o qq - (optional) pre-defined clusters
+
+ Returns: 
+ o dpm - the initialized DPM
+ o structure - the model's representation of the experimental settings for
+               each trial of the experiment
+
+ Based on the implementation by Yee Whye Teh
+ initialize DP mixture model, with 
+ KK active mixture components,
+ aa concentration parameter,
+ xx data, x_i=xx{i}
+ zz initial cluster assignments (between 1 and KK).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="parms_init.html" class="code" title="function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p)">parms_init</a>	Initializes paramaters from values or by sampling from the prior dist.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Initializes a Dirichlet Process Mixture (DPM) to known parameters</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Initializes a Dirichlet Process Mixture from known clusters or from the</span>
+0004 <span class="comment">% prior distribution for cluster parameters.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Arguments:</span>
+0007 <span class="comment">% o KK - number of active clusters</span>
+0008 <span class="comment">% o aa - concentration parameter</span>
+0009 <span class="comment">% o xx - a cell array of data for each participant</span>
+0010 <span class="comment">%        format: x_i=xx{i}</span>
+0011 <span class="comment">% o zz - a vectir of initial cluster assignments for each participant</span>
+0012 <span class="comment">% o qq - (optional) pre-defined clusters</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Returns:</span>
+0015 <span class="comment">% o dpm - the initialized DPM</span>
+0016 <span class="comment">% o structure - the model's representation of the experimental settings for</span>
+0017 <span class="comment">%               each trial of the experiment</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Based on the implementation by Yee Whye Teh</span>
+0020 <a name="_sub0" href="#_subfunctions" class="code">function dpm = dpm_init(KK,aa,xx,zz,qq)</a>
+0021 <span class="comment">% initialize DP mixture model, with</span>
+0022 <span class="comment">% KK active mixture components,</span>
+0023 <span class="comment">% aa concentration parameter,</span>
+0024 <span class="comment">% xx data, x_i=xx{i}</span>
+0025 <span class="comment">% zz initial cluster assignments (between 1 and KK).</span>
+0026 dpm.KK = KK;
+0027 dpm.NN = length(xx);
+0028 dpm.aa = aa;
+0029 dpm.xx = xx;
+0030 dpm.zz = zz;
+0031 dpm.nn = zeros(1,KK);
+0032 
+0033 <span class="comment">% initialize mixture components</span>
+0034 <span class="keyword">if</span> nargin &lt; 5
+0035     dpm.qq = cell(1,KK);
+0036     <span class="keyword">for</span> kk = 1:KK
+0037         dpm.qq{kk} = <a href="parms_init.html" class="code" title="function parms = parms_init(cue_p,sal_p,boxes_p,habit_p,assoc_p)">parms_init</a>();
+0038     <span class="keyword">end</span>
+0039     
+0040 <span class="keyword">else</span> <span class="comment">%use pre-defined clusters</span>
+0041     dpm.qq = qq;
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="comment">% add data items into mixture components</span>
+0045 <span class="keyword">for</span> ii = 1:dpm.NN
+0046   kk = zz(ii);
+0047   dpm.nn(kk) = dpm.nn(kk) + 1;
+0048 <span class="keyword">end</span>
+0049</pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

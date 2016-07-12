@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of graph_clusters_bars</title>
+  <meta name="keywords" content="graph_clusters_bars">
+  <meta name="description" content="Graphs posterior median and cred. int. for association and cue params">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">analysis_functions</a> &gt; graph_clusters_bars.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\analysis_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>graph_clusters_bars
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Graphs posterior median and cred. int. for association and cue params</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [] = graph_clusters_bars(meds,ints,c_sizes,color) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Graphs posterior median and cred. int. for association and cue params
+
+ Graphs the median and standard error for two parameters in the Wu &amp; 
+ Kirkham simulation: association and cue. The size of each cluster 
+ corresponds to the proportion of infants in that cluster. Each cluster is
+ centered at the median posterior parameter value, and &quot;error bars&quot;
+ indicate a credible interval estimate for that parameter. These intervals
+ indicate the marginal credible intervals for each parameter
+ independently. A better, but more computationally expensive, solution
+ would be to consider the joint posterior.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="posterior_graph.html" class="code" title="">posterior_graph</a>	Graphs posterior distributions for parameters from Wu & Kirkham</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Graphs posterior median and cred. int. for association and cue params</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Graphs the median and standard error for two parameters in the Wu &amp;</span>
+0004 <span class="comment">% Kirkham simulation: association and cue. The size of each cluster</span>
+0005 <span class="comment">% corresponds to the proportion of infants in that cluster. Each cluster is</span>
+0006 <span class="comment">% centered at the median posterior parameter value, and &quot;error bars&quot;</span>
+0007 <span class="comment">% indicate a credible interval estimate for that parameter. These intervals</span>
+0008 <span class="comment">% indicate the marginal credible intervals for each parameter</span>
+0009 <span class="comment">% independently. A better, but more computationally expensive, solution</span>
+0010 <span class="comment">% would be to consider the joint posterior.</span>
+0011 
+0012 <a name="_sub0" href="#_subfunctions" class="code">function [] = graph_clusters_bars(meds,ints,c_sizes,color)</a>
+0013 
+0014 SCALE = .075;
+0015 
+0016 <span class="keyword">for</span> clu = 1:length(meds)
+0017     
+0018     prop = sqrt(c_sizes(clu)/sum(c_sizes)) * SCALE;
+0019     pos = [meds{clu}.cue - prop/2, meds{clu}.assoc - prop/2, prop, prop] ;
+0020     
+0021     <span class="comment">%make errorbars</span>
+0022     h = plot([ints{clu}.cue(1) ints{clu}.cue(2)], <span class="keyword">...</span>
+0023         [meds{clu}.assoc meds{clu}.assoc], <span class="string">'--'</span>,<span class="keyword">...</span>
+0024         <span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,color);
+0025     
+0026     <span class="comment">%remove legend entries for credible intervals</span>
+0027     <span class="keyword">if</span> clu ~= length(meds)
+0028         set(get(get(h,<span class="string">'Annotation'</span>),<span class="string">'LegendInformation'</span>),<span class="keyword">...</span>
+0029             <span class="string">'IconDisplayStyle'</span>,<span class="string">'off'</span>)
+0030     <span class="keyword">end</span>
+0031     
+0032     hold on;
+0033     h = plot([meds{clu}.cue meds{clu}.cue], <span class="keyword">...</span>
+0034         [ints{clu}.assoc_high ints{clu}.assoc_low], <span class="string">'--'</span>,<span class="keyword">...</span>
+0035         <span class="string">'LineWidth'</span>,2,<span class="string">'Color'</span>,color);
+0036       
+0037     <span class="comment">%remove credible intervals for extra clusters</span>
+0038     set(get(get(h,<span class="string">'Annotation'</span>),<span class="string">'LegendInformation'</span>),<span class="keyword">...</span>
+0039         <span class="string">'IconDisplayStyle'</span>,<span class="string">'off'</span>)
+0040     
+0041     <span class="comment">%make ellipse</span>
+0042     rectangle(<span class="string">'Position'</span>,pos,<span class="string">'Curvature'</span>,[1 1],<span class="string">'FaceColor'</span>,color,<span class="keyword">...</span>
+0043         <span class="string">'EdgeColor'</span>,<span class="string">'k'</span>);
+0044  
+0045 <span class="keyword">end</span>
+0046 
+0047 xlabel(<span class="string">'Cue'</span>,<span class="string">'fontsize'</span>,14);
+0048 ylabel(<span class="string">'Association'</span>,<span class="string">'fontsize'</span>,14);
+0049 axis([-.1 .65 0 .4]);
+0050 title(<span class="string">'Parameter Posterior Distributions'</span>,<span class="string">'fontsize'</span>,14);
+0051 daspect([1,1,1]);
+0052 
+0053 <span class="keyword">end</span>
+0054</pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

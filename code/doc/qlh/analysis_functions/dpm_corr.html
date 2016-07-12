@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dpm_corr</title>
+  <meta name="keywords" content="dpm_corr">
+  <meta name="description" content="Calculates the correlation between DPM predictions and empirical">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">analysis_functions</a> &gt; dpm_corr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\analysis_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>dpm_corr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates the correlation between DPM predictions and empirical</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [c p] = dpm_corr(dpm,test_flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Calculates the correlation between DPM predictions and empirical
+ data for a single DPM
+
+ Generates predictions from a DPM parameterization and compares them to 
+ the empirical data used to fit DPM parameters.
+
+ Arguments:
+  o dpm - a single MCMC sample from the DPM distribution
+  o test_flag - a boolean that determines if all or only test data are
+                used to compute correlations
+
+ Returns: 
+ o c - correlation between predictions and empirical data
+ o p - significance of the correlation</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="posterior_corr.html" class="code" title="function [c p] = posterior_corr(dpms,test_flag)">posterior_corr</a>	Calculates the correlation between DPM predictions and empirical</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Calculates the correlation between DPM predictions and empirical</span>
+0002 <span class="comment">% data for a single DPM</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Generates predictions from a DPM parameterization and compares them to</span>
+0005 <span class="comment">% the empirical data used to fit DPM parameters.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Arguments:</span>
+0008 <span class="comment">%  o dpm - a single MCMC sample from the DPM distribution</span>
+0009 <span class="comment">%  o test_flag - a boolean that determines if all or only test data are</span>
+0010 <span class="comment">%                used to compute correlations</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Returns:</span>
+0013 <span class="comment">% o c - correlation between predictions and empirical data</span>
+0014 <span class="comment">% o p - significance of the correlation</span>
+0015 
+0016 <a name="_sub0" href="#_subfunctions" class="code">function [c p] = dpm_corr(dpm,test_flag)</a>
+0017 
+0018     data_pts = arrayfun(@(x) dpm.xx{x}.data,1:dpm.NN, <span class="keyword">...</span>
+0019         <span class="string">'UniformOutput'</span>, false);
+0020     data_pts = vertcat(data_pts{:});
+0021     
+0022     gen_pts = arrayfun(@(x) gen_data_pt(dpm.qq{dpm.zz(x)}, <span class="keyword">...</span>
+0023         dpm.xx{x}.structure), 1:dpm.NN, <span class="string">'UniformOutput'</span>, false);
+0024     gen_pts = vertcat(gen_pts{:});
+0025     
+0026     <span class="keyword">if</span> test_flag
+0027         gen_pts = gen_pts(7:7:<span class="keyword">end</span>,:);
+0028         data_pts = data_pts(7:7:<span class="keyword">end</span>,:);
+0029     <span class="keyword">end</span>
+0030 
+0031    [c p] = corrcoef(data_pts,gen_pts);
+0032    c = c(1,2);
+0033    p = p(1,2);
+0034 
+0035 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

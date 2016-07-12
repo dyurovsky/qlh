@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mdpa</title>
+  <meta name="keywords" content="mdpa">
+  <meta name="description" content="Calculates distance between two categorical histograms using the MDPA">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">helper_functions</a> &gt; mdpa.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\helper_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>mdpa
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Calculates distance between two categorical histograms using the MDPA</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dist = mdpa(hist1,hist2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Calculates distance between two categorical histograms using the MDPA
+
+ MDPA measures the distance between two categorical histograms. See:
+ Cha, S., &amp; Srihari, S. N. (2002). On measuring the distance between
+   histograms. Pattern Recognition, 35, 1355-1370.
+
+ Arguments:
+  o hist1 - the first histogram
+  o hist2 - the second histogram
+
+ Returns: 
+ o mdpa - the distance between hist1 and hist2</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Calculates distance between two categorical histograms using the MDPA</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% MDPA measures the distance between two categorical histograms. See:</span>
+0004 <span class="comment">% Cha, S., &amp; Srihari, S. N. (2002). On measuring the distance between</span>
+0005 <span class="comment">%   histograms. Pattern Recognition, 35, 1355-1370.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Arguments:</span>
+0008 <span class="comment">%  o hist1 - the first histogram</span>
+0009 <span class="comment">%  o hist2 - the second histogram</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Returns:</span>
+0012 <span class="comment">% o mdpa - the distance between hist1 and hist2</span>
+0013 <a name="_sub0" href="#_subfunctions" class="code">function dist = mdpa(hist1,hist2)</a>
+0014 
+0015 <span class="comment">%Truncates histograms if one has more categories than the other</span>
+0016 <span class="keyword">if</span> size(hist1,2) &lt; size(hist2,2)
+0017     hist2 = hist2(:,1:size(hist1,2));
+0018 <span class="keyword">elseif</span> size(hist2,2) &lt; size(hist1,2)
+0019     hist1 = hist1(:,1:size(hist2,2));
+0020 <span class="keyword">end</span>
+0021 
+0022 dist = sum(max(hist1,hist2),2) - sum(min(hist1,hist2),2);
+0023 
+0024 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

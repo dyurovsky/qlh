@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of model_test</title>
+  <meta name="keywords" content="model_test">
+  <meta name="description" content="Generates data from a known model with optional supplied parameters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">simulation_functions</a> &gt; model_test.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\simulation_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>model_test
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Generates data from a known model with optional supplied parameters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [test_qq data test_nn] = model_test(num_groups,cue_val,sal_val,assoc_val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Generates data from a known model with optional supplied parameters
+
+ Creates an initial DPM according to the supplied parameters and generates
+ data from it. Used for testing the robustness of the inference framework.
+
+ Arguments:
+ o num_groups - (optional) number of clusters in the model
+ o cue_val - (optional) value of the cue parameter
+ o sal_val - (optional) value of the salience paramater
+ o assoc_val - (optional) value of the association parameter
+
+ Returns: 
+ o test_qq - the clusters in the generated model
+ o test_nn - the number of participants in each cluster</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="data_init.html" class="code" title="function data_pt = data_init(data,structure)">data_init</a>	Initializes a participant's data from gaze data and experiment sturcture</li><li><a href="gen_data_pt.html" class="code" title="function data = gen_data_pt(parms,structure)">gen_data_pt</a>	Generates data from the model given parameters and experimental structure</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Generates data from a known model with optional supplied parameters</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Creates an initial DPM according to the supplied parameters and generates</span>
+0004 <span class="comment">% data from it. Used for testing the robustness of the inference framework.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Arguments:</span>
+0007 <span class="comment">% o num_groups - (optional) number of clusters in the model</span>
+0008 <span class="comment">% o cue_val - (optional) value of the cue parameter</span>
+0009 <span class="comment">% o sal_val - (optional) value of the salience paramater</span>
+0010 <span class="comment">% o assoc_val - (optional) value of the association parameter</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Returns:</span>
+0013 <span class="comment">% o test_qq - the clusters in the generated model</span>
+0014 <span class="comment">% o test_nn - the number of participants in each cluster</span>
+0015 <a name="_sub0" href="#_subfunctions" class="code">function [test_qq data test_nn] = model_test(num_groups,cue_val,</a><span class="keyword">...</span>
+0016     sal_val,assoc_val)
+0017 
+0018 <span class="keyword">global</span> NUM_AOIS;
+0019 
+0020 NUM_SUBJS = 10;
+0021 NUM_GROUPS = 1;
+0022 
+0023 <span class="keyword">if</span> nargin &gt; 0
+0024     NUM_GROUPS = num_groups;
+0025 <span class="keyword">end</span>
+0026 
+0027 cues = [0 1 2 3];
+0028 sals = [0 1 2 3];
+0029 assocs = [0 .2 .4 .6];
+0030 
+0031 cues = cues(randperm(length(cues)));
+0032 sals = sals(randperm(length(sals)));
+0033 assocs = assocs(randperm(length(assocs)));
+0034 
+0035 test_nn = mnrnd(NUM_SUBJS,ones(NUM_GROUPS,1)/NUM_GROUPS);
+0036 
+0037 zz = arrayfun(@(x,y) y*ones(1,x),test_nn,1:NUM_GROUPS,<span class="string">'UniformOutput'</span>,false);
+0038 zz = horzcat(zz{:});
+0039 
+0040 test_qq = cell(1,NUM_GROUPS);
+0041 data = cell(1,NUM_SUBJS);
+0042 
+0043 <span class="keyword">for</span> group = 1:NUM_GROUPS
+0044 
+0045     boxes_p = [-2 -2 -2 -2 .5] + rand(1,NUM_AOIS);
+0046        
+0047     <span class="keyword">if</span> nargin &gt;=2     
+0048         cue_p = cue_val;
+0049     <span class="keyword">else</span>
+0050         cue_p = cues(group);
+0051     <span class="keyword">end</span>
+0052     
+0053     <span class="keyword">if</span> nargin &gt;=3 
+0054         sal_p = sal_val;
+0055     <span class="keyword">else</span>
+0056         sal_p = sals(group);
+0057     <span class="keyword">end</span>
+0058     
+0059     <span class="keyword">if</span> nargin &gt;=4
+0060         assoc_p = assoc_val;
+0061     <span class="keyword">else</span>
+0062         assoc_p = assocs(group);
+0063     <span class="keyword">end</span>
+0064          
+0065     test_qq{group} = parms_init(cue_p,sal_p,boxes_p,[],assoc_p);
+0066 <span class="keyword">end</span>
+0067 
+0068 <span class="keyword">for</span> subj = 1:NUM_SUBJS
+0069     
+0070     tests = [1 1 2 2];
+0071     rnd_tst = randperm(length(tests));
+0072     
+0073     structure = zeros(0,NUM_AOIS);
+0074     
+0075     <span class="keyword">for</span> block = 1:length(tests)
+0076     
+0077         block_structure = zeros(6,NUM_AOIS);
+0078         block_structure(1:3,[3 5]) = [2 2; 2 2; 2 2];
+0079         block_structure(4:6,[4 5]) = [2 1; 2 1; 2 1];
+0080         block_structure(1:3,2) = 1;
+0081         block_structure(4:6,1) = 1;
+0082 
+0083         rnd = randperm(6);
+0084         
+0085         block_structure = block_structure(rnd,:);
+0086         block_structure(7,:) = [0 0 0 0 tests(rnd_tst(block))];
+0087         
+0088         structure = [structure; block_structure];
+0089     <span class="keyword">end</span>
+0090     
+0091     data{subj} = <a href="data_init.html" class="code" title="function data_pt = data_init(data,structure)">data_init</a>(<a href="gen_data_pt.html" class="code" title="function data = gen_data_pt(parms,structure)">gen_data_pt</a>(test_qq{zz(subj)},structure),<span class="keyword">...</span>
+0092         structure);
+0093 <span class="keyword">end</span>
+0094 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

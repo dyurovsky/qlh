@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dpm_sm</title>
+  <meta name="keywords" content="dpm_sm">
+  <meta name="description" content="Runs one round of Split-Merge Sampling for a DPM">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">crp_model_public</a> &gt; <a href="index.html">mcmc_functions</a> &gt; dpm_sm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\mcmc_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>dpm_sm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Runs one round of Split-Merge Sampling for a DPM</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [dpm,acc] = dpm_sm(dpm) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Runs one round of Split-Merge Sampling for a DPM
+
+ Picks splitting or merging with equal likelihood. Picks the newly
+ obtained DPM according to a MH proposal distribution. See:
+ Jain, S., &amp; Neal, R. M. (2007). Splitting and merging components of a
+   nonconjugate Dirichlet process mixture model. Bayesian Analysis, 2,
+   445-472.
+
+ Arguments:
+ o dpm - a sample from the DPM probability distribution
+
+ Returns: 
+ o dpm - the new DPM sample after MH
+ o acc - the number of clusters whose parameters changed in this round 
+ run one iteration of Split/Merge in the DP mixture</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="parm_change_like.html" class="code" title="function lp = parm_change_like(qq1,qq2)">parm_change_like</a>	Calculates the probability of switching between parameter settings</li><li><a href="propose_parms.html" class="code" title="function new_parms = propose_parms(parms,all_flag,sigma)">propose_parms</a>	Proposes new parameters for a cluster</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Runs one round of Split-Merge Sampling for a DPM</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Picks splitting or merging with equal likelihood. Picks the newly</span>
+0004 <span class="comment">% obtained DPM according to a MH proposal distribution. See:</span>
+0005 <span class="comment">% Jain, S., &amp; Neal, R. M. (2007). Splitting and merging components of a</span>
+0006 <span class="comment">%   nonconjugate Dirichlet process mixture model. Bayesian Analysis, 2,</span>
+0007 <span class="comment">%   445-472.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Arguments:</span>
+0010 <span class="comment">% o dpm - a sample from the DPM probability distribution</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Returns:</span>
+0013 <span class="comment">% o dpm - the new DPM sample after MH</span>
+0014 <span class="comment">% o acc - the number of clusters whose parameters changed in this round</span>
+0015 <a name="_sub0" href="#_subfunctions" class="code">function [dpm,acc] = dpm_sm(dpm)</a>
+0016 <span class="comment">% run one iteration of Split/Merge in the DP mixture</span>
+0017 
+0018 NN = dpm.NN; <span class="comment">% number of data items</span>
+0019 zz = dpm.zz; <span class="comment">% row vector of cluster indicator variables</span>
+0020 nn = dpm.nn; <span class="comment">% row vector of number of data items per cluster</span>
+0021 
+0022 acc = 0;
+0023 type = 0;
+0024 
+0025 rds = randperm(NN);
+0026 
+0027 clu_1 = zz(rds(1));
+0028 clu_2 = zz(rds(2));
+0029 
+0030 <span class="comment">%propose split</span>
+0031 <span class="keyword">if</span> clu_1 == clu_2
+0032     <span class="comment">%disp('propose split')</span>
+0033     prop_dpm = dpm;
+0034     
+0035     ids = find(zz == clu_1);
+0036     
+0037     move = rand(1,nn(clu_1)) &gt; .5;
+0038     moved = sum(move);
+0039     
+0040     <span class="keyword">if</span> moved == 0 
+0041         <span class="keyword">return</span>;
+0042     <span class="keyword">elseif</span> moved == length(ids)
+0043         prop_dpm.qq{clu_1} = <a href="propose_parms.html" class="code" title="function new_parms = propose_parms(parms,all_flag,sigma)">propose_parms</a>(prop_dpm.qq{clu_1},1);
+0044     <span class="keyword">else</span> <span class="comment">%re-numbers clusters</span>
+0045         prop_dpm.KK = prop_dpm.KK + 1;
+0046         prop_dpm.zz(ids(move)) = prop_dpm.KK;
+0047         prop_dpm.nn(clu_1) = nn(clu_1) - moved;
+0048         prop_dpm.nn(prop_dpm.KK) = moved;
+0049         prop_dpm.qq{prop_dpm.KK} = <a href="propose_parms.html" class="code" title="function new_parms = propose_parms(parms,all_flag,sigma)">propose_parms</a>(prop_dpm.qq{clu_1},1);
+0050     <span class="keyword">end</span>
+0051     
+0052     <span class="comment">%calculates q for proposal probability</span>
+0053     q = -log(binopdf(moved,length(ids),.5)) - <span class="keyword">...</span>
+0054         <a href="parm_change_like.html" class="code" title="function lp = parm_change_like(qq1,qq2)">parm_change_like</a>(dpm.qq{clu_1},prop_dpm.qq{prop_dpm.KK});
+0055     
+0056 <span class="keyword">else</span> <span class="comment">%propose merge</span>
+0057    <span class="comment">% disp('propose merge')</span>
+0058     prop_dpm = dpm;
+0059     prop_dpm.zz(dpm.zz == clu_1) = clu_2;
+0060     prop_dpm.qq = prop_dpm.qq([1:(clu_1-1) (clu_1+1):end]);
+0061     
+0062     prop_dpm.nn(clu_2) = prop_dpm.nn(clu_2) + prop_dpm.nn(clu_1);
+0063     
+0064     <span class="comment">%calculates q for proposal probability</span>
+0065     q = log(binopdf(nn(clu_1),prop_dpm.nn(clu_2),.5)) + <span class="keyword">...</span>
+0066         <a href="parm_change_like.html" class="code" title="function lp = parm_change_like(qq1,qq2)">parm_change_like</a>(dpm.qq{clu_2},dpm.qq{clu_1});
+0067     
+0068     prop_dpm.nn = prop_dpm.nn([1:(clu_1-1) (clu_1+1):end]);
+0069     prop_dpm.KK = prop_dpm.KK - 1;
+0070     
+0071     <span class="comment">%re-numbers clusters</span>
+0072     to_fix = prop_dpm.zz &gt; clu_1;
+0073     prop_dpm.zz(to_fix) = prop_dpm.zz(to_fix) - 1;
+0074     type = 1;
+0075 <span class="keyword">end</span>
+0076    
+0077 <span class="comment">%calculates likelihood ratio between current and proposed DPM</span>
+0078 rat = q + logprobdpm(prop_dpm) - logprobdpm(dpm);
+0079 
+0080 <span class="comment">%dpm = prop_dpm;</span>
+0081 
+0082 <span class="keyword">if</span> (rat &gt; 0) || (log(rand) &lt; rat)
+0083     <span class="keyword">if</span> type == 1
+0084         disp(<span class="string">'merge!!'</span>)
+0085     <span class="keyword">else</span>
+0086         disp(<span class="string">'split!!'</span>);
+0087     <span class="keyword">end</span>
+0088    <span class="comment">% disp([logprobdpm(dpm) logprobdpm(prop_dpm)]);</span>
+0089    <span class="comment">% disp(prop_dpm.qq{prop_dpm.KK})</span>
+0090     dpm = prop_dpm;
+0091     acc = 1;
+0092 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

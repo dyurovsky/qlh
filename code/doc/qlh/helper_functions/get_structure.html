@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_structure</title>
+  <meta name="keywords" content="get_structure">
+  <meta name="description" content="Gets the structure of each experimental trial">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">qlh</a> &gt; <a href="index.html">helper_functions</a> &gt; get_structure.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\helper_functions&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>get_structure
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Gets the structure of each experimental trial</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function structure = get_structure(types) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Gets the structure of each experimental trial
+
+ Converts from Wu &amp; Kirkham coding to model's coding of trial type. This
+ structure indicates the locations that are cued and salient, and the word
+ heard on each trial.
+
+ Arguments:
+  o types - a cell array of trial types in Wu &amp; Kirkham format
+
+ Returns: 
+ o structure - the experimental structure for this participant</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Gets the structure of each experimental trial</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Converts from Wu &amp; Kirkham coding to model's coding of trial type. This</span>
+0004 <span class="comment">% structure indicates the locations that are cued and salient, and the word</span>
+0005 <span class="comment">% heard on each trial.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Arguments:</span>
+0008 <span class="comment">%  o types - a cell array of trial types in Wu &amp; Kirkham format</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Returns:</span>
+0011 <span class="comment">% o structure - the experimental structure for this participant</span>
+0012 <a name="_sub0" href="#_subfunctions" class="code">function structure = get_structure(types)</a>
+0013 
+0014     WORDS = {<span class="string">'cat'</span>,<span class="string">'dog'</span>,<span class="string">'mumu'</span>,<span class="string">'bounce'</span>};
+0015     OBJS = {<span class="string">'left'</span>,<span class="string">'right'</span>};
+0016 
+0017     word_types = zeros(length(types),1);
+0018     <span class="keyword">for</span> word = 1:length(WORDS)
+0019        
+0020         inds = ~cellfun(@isempty,strfind(types,WORDS{word}));
+0021         word_types = word_types + (mod(word+1,2)+1)*inds;
+0022         
+0023     <span class="keyword">end</span>
+0024     
+0025     sal_types = zeros(length(types),4);
+0026     cue_types = sal_types;
+0027     
+0028     <span class="keyword">for</span> obj = 1:length(OBJS)
+0029        
+0030         inds = ~cellfun(@isempty,strfind(types,OBJS{obj}));
+0031         
+0032         <span class="keyword">if</span> obj == 1
+0033             sal_types(inds,:) = repmat([0 1 1 0],sum(inds),1);
+0034             cue_types(inds,:) = repmat([0 0 1 0],sum(inds),1);
+0035         <span class="keyword">else</span>
+0036             sal_types(inds,:) = repmat([1 0 0 1],sum(inds),1);
+0037             cue_types(inds,:) = repmat([0 0 0 1],sum(inds),1);
+0038         <span class="keyword">end</span>
+0039         
+0040     <span class="keyword">end</span>
+0041     
+0042     structure = sal_types+cue_types;
+0043     structure(:,end+1) = word_types;
+0044 
+0045 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

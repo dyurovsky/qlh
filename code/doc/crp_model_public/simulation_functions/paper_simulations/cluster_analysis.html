@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cluster_analysis</title>
+  <meta name="keywords" content="cluster_analysis">
+  <meta name="description" content="Analyzes the ability of inference to correctly recover clusters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">crp_model_public</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; cluster_analysis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for crp_model_public\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cluster_analysis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Analyzes the ability of inference to correctly recover clusters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function mean_diff = nn_diff(t_nns,a_nns) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Analyzes the ability of inference to correctly recover clusters
+
+ Determine the efficacy of inference in recovering the correct number of 
+ cluster parameters by comparing ground-truth clusters to inferred
+ clusters. Treats each cluster distribution as a categorical histogram and
+ compares distance using MDPA
+
+ Arguments:
+ o test_nns - currect number of subjects in each cluster
+ o all_nns - inferred number of subjects in each cluster
+
+ Returns: 
+ o group_diff - difference between number of clusters
+ o hist_dists - distance on each run according to MDPA</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Analyzes the ability of inference to correctly recover clusters</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Determine the efficacy of inference in recovering the correct number of</span>
+0004 <span class="comment">% cluster parameters by comparing ground-truth clusters to inferred</span>
+0005 <span class="comment">% clusters. Treats each cluster distribution as a categorical histogram and</span>
+0006 <span class="comment">% compares distance using MDPA</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Arguments:</span>
+0009 <span class="comment">% o test_nns - currect number of subjects in each cluster</span>
+0010 <span class="comment">% o all_nns - inferred number of subjects in each cluster</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Returns:</span>
+0013 <span class="comment">% o group_diff - difference between number of clusters</span>
+0014 <span class="comment">% o hist_dists - distance on each run according to MDPA</span>
+0015 <a name="_sub0" href="#_subfunctions" class="code">function [group_diff,hist_dists] = cluster_analysis(test_nns,all_nns)</a>
+0016 
+0017     <a name="_sub1" href="#_subfunctions" class="code">function mean_diff = nn_diff(t_nns,a_nns)</a>
+0018         
+0019         tmp_diff = inf;
+0020         p_nns = perms(t_nns);
+0021         
+0022         <span class="keyword">for</span> i = 1:size(p_nns,1)  
+0023             mean_diff = mean(mdpa((p_nns(i,:)'*ones(1,size(a_nns,1)))',<span class="keyword">...</span>
+0024                 a_nns));
+0025             <span class="keyword">if</span> mean_diff &lt; tmp_diff
+0026                 tmp_diff = mean_diff;
+0027             <span class="keyword">end</span>
+0028         <span class="keyword">end</span>
+0029         mean_diff = tmp_diff;
+0030     <span class="keyword">end</span>
+0031         
+0032 
+0033     emp_group = cellfun(@(x) size(x,2), all_nns);
+0034     true_group = cellfun(@(x) size(x,2), test_nns);
+0035 
+0036     group_diff = sum(sum(emp_group - true_group));
+0037 
+0038     hist_dists = cellfun(@nn_diff,test_nns,all_nns);
+0039 
+0040     bar(mean(hist_dists,2)/30,<span class="string">'facecolor'</span>,[.6 .6 .6]);
+0041     axis([.5 4.5 0 .005]);
+0042     xlabel(<span class="string">'Number of Groups'</span>,<span class="string">'fontsize'</span>,12);
+0043     ylabel(<span class="string">'Prop. Misclassified'</span>,<span class="string">'fontsize'</span>,12);
+0044     set(gca,<span class="string">'ytick'</span>,[0 .001 .002 .003 .004 .005]);
+0045     set(gca,<span class="string">'yticklabel'</span>,num2str(get(gca,<span class="string">'ytick'</span>)'))
+0046     title(<span class="string">'Proportion of Infants Misclassified'</span>,<span class="string">'fontsize'</span>,14);
+0047     
+0048 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 18:34:48 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

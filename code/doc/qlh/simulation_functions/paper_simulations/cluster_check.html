@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cluster_check</title>
+  <meta name="keywords" content="cluster_check">
+  <meta name="description" content="Checks whether inference can correctly recover ground-truth clusters">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">qlh</a> &gt; <a href="../index.html">simulation_functions</a> &gt; <a href="index.html">paper_simulations</a> &gt; cluster_check.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for qlh\simulation_functions\paper_simulations&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cluster_check
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Checks whether inference can correctly recover ground-truth clusters</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Checks whether inference can correctly recover ground-truth clusters
+
+ Sets the number of groups to several known values, generates data from
+ randomly parameterized models with this number of groups, and infers the
+ number of groups from this generated data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Checks whether inference can correctly recover ground-truth clusters</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Sets the number of groups to several known values, generates data from</span>
+0004 <span class="comment">% randomly parameterized models with this number of groups, and infers the</span>
+0005 <span class="comment">% number of groups from this generated data</span>
+0006 <span class="comment">%</span>
+0007 groups = 1:5;
+0008 NUM_RUNS = 30;
+0009 
+0010 all_nns = cell(length(groups),NUM_RUNS);
+0011 test_nns = cell(length(groups),NUM_RUNS);
+0012 test_qqs = cell(length(groups),NUM_RUNS);
+0013 <span class="keyword">for</span> group = 1:length(groups)
+0014     <span class="keyword">for</span> check = 1:NUM_RUNS
+0015     
+0016         disp([group check])
+0017         tic
+0018 
+0019         [test_qq,data,test_nn] = model_test(group);
+0020 
+0021         test_nns{group,check} = test_nn;
+0022         test_qqs{group,check} = test_qq;
+0023 
+0024         [~,dpms] = aggregate_subjs_test;
+0025         [ints nns meds means stds]= cred_int(dpms(500:end));
+0026 
+0027         all_nns{group,check} = nns;
+0028         size(nns)
+0029         toc
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 25-Jun-2012 19:06:31 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
